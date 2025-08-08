@@ -1,0 +1,122 @@
+---
+description: Reviewing Raycast Extension PRs
+alwaysApply: false
+---
+
+# Review an Extension in a Pull Request
+
+All updates to an extension are made through a [Pull Request](https://github.com/raycast/extensions/pulls) - if you need to review whether the Pull Request works as expected, then you can checkout the fork within a few seconds.
+
+## Quick Start (Recommended)
+
+When you provide a PR URL like `@https://github.com/raycast/extensions/pull/20805`, I'll automatically extract the information and set up the review environment for you.
+
+## Manual Steps (If needed)
+
+1. Open a terminal window
+2. Navigate to the extensions folder: `/Users/tommy/Cursor/raycast-extensions/`
+3. Run the below commands
+
+_There are a few things you'll need to find and insert manually in the snippet below_
+
+**FORK\_URL**
+
+Open the PR and click on the incoming ref as shown below
+
+![](https://2922539984-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-Me_8A39tFhZg3UaVoSN%2Fuploads%2Fgit-blob-1a66bb065c6f9ccb78f4a42eebdcd3c70837fb1d%2Fgo-to-ref.webp?alt=media)
+
+Now click the code button and copy the HTTPS path from the dropdown
+
+**BRANCH**
+
+You can see the branch on the above image (in this example it's `notion-quicklinks`)
+
+**EXTENSION\_NAME**
+
+Click the `Files Changed` tab to see in which directory files have been changed (in this example it's `notion`)
+
+```bash
+# Set variables for the specific PR
+BRANCH="ext/image-wallet"
+FORK_URL="https://github.com/hetommy/raycast-extensions.git"
+EXTENSION_NAME="image-wallet"
+
+# Clean up any existing extension directory
+rm -rf "${EXTENSION_NAME}"
+
+# Clone only the specific extension using sparse checkout
+git clone -n --depth=1 --filter=tree:0 -b ${BRANCH} ${FORK_URL} temp-pr
+cd temp-pr
+git sparse-checkout set --no-cone "extensions/${EXTENSION_NAME}"
+git checkout
+
+# Move the extension to the correct location and clean up
+# Use absolute paths to avoid directory navigation issues
+mv "extensions/${EXTENSION_NAME}" "/Users/tommy/Cursor/raycast-extensions/" && cd "/Users/tommy/Cursor/raycast-extensions" && rm -rf temp-pr
+
+# Install dependencies and start development
+cd "${EXTENSION_NAME}"
+npm install && npm run dev
+
+# Initialize git repository for publishing (if needed)
+if [ ! -d ".git" ]; then
+  git init
+  git add .
+  git commit -m "Initial commit"
+fi
+```
+
+4. **Verify the setup**:
+   ```bash
+   # Check that the extension is properly organized
+   ls -la
+   # Should show the extension files directly in the current directory
+   ```
+
+5. That's it, the extension should now be attached in Raycast
+
+## Publishing (When Ready)
+
+When you're ready to publish your changes:
+
+```bash
+# Make sure you're in the extension directory
+cd "${EXTENSION_NAME}"
+
+# Optional: Test the extension first
+# npm run dev
+# Test the extension in Raycast to make sure everything works as expected
+
+# Publish (will require confirmation)
+npm run publish
+```
+
+**Note**: The extension must be in a git repository to publish. The setup script above automatically initializes git if needed.
+
+## Troubleshooting
+
+- **If the extension is nested**: The script above should handle this automatically
+- **If sparse checkout fails**: Try using the full repository clone as a fallback
+- **If npm install fails**: Check that you're in the correct extension directory
+- **If directory navigation fails**: The script now uses absolute paths to avoid relative path issues
+- **If git init fails**: Make sure you're in the extension directory before running git commands
+
+## Tips for Efficient Reviews
+
+- Use `git diff` to see changes between the PR and main branch
+- Test the extension thoroughly with various file types and edge cases
+- Check for linting errors with `npm run lint`
+- Verify the build works with `npm run build`
+
+## PR URL Format
+
+When referencing a PR, use this format:
+```
+@https://github.com/raycast/extensions/pull/PR_NUMBER
+```
+
+I'll automatically extract:
+- PR number
+- Fork URL (from the PR details)
+- Branch name (from the PR details)
+- Extension name (from the Files Changed tab)

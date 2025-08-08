@@ -1,0 +1,101 @@
+---
+description: Testing Raycast Extension
+alwaysApply: false
+---
+
+# Testing Raycast Extensions
+
+## Critical Testing Workflow
+
+When testing a Raycast extension from a PR, **always change into the extension directory first**:
+
+```bash
+# Navigate to the specific extension directory and run all commands in one chain
+cd /Users/tommy/Cursor/raycast-extensions/EXTENSION_NAME && pwd && ls package.json && npm install && npm run dev
+```
+
+**Alternative step-by-step approach (if needed):**
+```bash
+# Navigate to the specific extension directory
+cd /Users/tommy/Cursor/raycast-extensions/EXTENSION_NAME
+
+# CRITICAL: Verify you're in the right directory
+pwd
+# Should show: /Users/tommy/Cursor/raycast-extensions/EXTENSION_NAME
+
+# Install dependencies first
+npm install
+
+# Then run development commands
+npm run dev
+```
+
+## Common Mistake to Avoid
+
+**❌ Don't run npm commands from the root directory:**
+```bash
+cd /Users/tommy/Cursor/raycast-extensions
+npm run dev  # This will fail - no package.json here!
+```
+
+**❌ Don't check directory then run commands from wrong location:**
+```bash
+cd /Users/tommy/Cursor/raycast-extensions/pick-your-wallpaper
+pwd  # Shows correct directory
+# But then running commands from parent directory - WRONG!
+```
+
+**✅ Recommended: Run all commands in one chain:**
+```bash
+cd /Users/tommy/Cursor/raycast-extensions/pick-your-wallpaper && pwd && ls package.json && npm install && npm run dev
+```
+
+**✅ Alternative: Step-by-step with verification:**
+```bash
+cd /Users/tommy/Cursor/raycast-extensions/pick-your-wallpaper
+pwd  # Verify you're in the right place
+ls package.json  # Confirm package.json exists
+npm install
+npm run dev
+```
+
+## Why This Matters
+
+- Each extension is in its own subdirectory with its own `package.json`
+- The root `/raycast-extensions` directory doesn't contain extension-specific files
+- Running npm commands from the wrong directory will result in "ENOENT: no such file or directory" errors
+- **Shell state can be misleading**: Even if `pwd` shows the correct directory, commands might still run from the wrong location
+- **Always verify with `ls package.json`** before running npm commands
+
+## Verification Steps
+
+1. **Check your current directory:**
+   ```bash
+   pwd
+   # Should show: /Users/tommy/Cursor/raycast-extensions/EXTENSION_NAME
+   ```
+
+2. **Verify package.json exists:**
+   ```bash
+   ls package.json
+   # Should show the package.json file
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   npm install
+   # This is required before running dev
+   ```
+
+4. **Then proceed with testing:**
+   ```bash
+   npm run dev
+   ```
+
+## Integration with PR Review Process
+
+This testing workflow should be integrated with the existing PR review process documented in `reviews.mdc`. The key addition is ensuring you're in the correct directory before running any npm commands.
+description:
+globs:
+alwaysApply: false
+---

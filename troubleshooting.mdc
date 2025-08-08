@@ -1,0 +1,263 @@
+---
+description: Raycast Extension Troubleshooting Guide
+alwaysApply: false
+---
+
+# Raycast Extension Troubleshooting
+
+## Common Issues and Solutions
+
+### 1. **Extension Not Loading**
+
+**Symptoms**: Extension appears in Raycast but doesn't respond or shows errors
+
+**Solutions**:
+```bash
+# Check if extension is properly built
+npm run build
+
+# Verify package.json has correct entry point
+cat package.json | grep "main"
+
+# Check for TypeScript errors
+npm run type-check
+
+# Restart Raycast completely
+# Quit Raycast and relaunch
+```
+
+**Common Causes**:
+- Missing dependencies in `package.json`
+- Incorrect entry point in `package.json`
+- TypeScript compilation errors
+- Missing required Raycast API imports
+
+### 2. **Build Failures**
+
+**Symptoms**: `npm run build` fails with errors
+
+**Solutions**:
+```bash
+# Clean install dependencies
+rm -rf node_modules package-lock.json
+npm install
+
+# Check TypeScript configuration
+cat tsconfig.json
+
+# Verify ESLint configuration
+npm run lint
+
+# Check for missing type definitions
+npm install --save-dev @types/node
+```
+
+**Common Causes**:
+- Outdated dependencies
+- Missing type definitions
+- Incorrect TypeScript configuration
+- ESLint rule violations
+
+### 3. **Runtime Errors**
+
+**Symptoms**: Extension works but crashes or shows errors during use
+
+**Debug Steps**:
+```bash
+# Enable verbose logging
+# Add to your extension code:
+console.log("Debug info:", variable);
+
+# Check Raycast developer console
+# Open Raycast → Preferences → Extensions → Developer Tools
+```
+
+**Common Runtime Issues**:
+- Unhandled promise rejections
+- Missing error boundaries
+- API rate limiting
+- Network connectivity issues
+
+### 4. **Performance Issues**
+
+**Symptoms**: Extension loads slowly or becomes unresponsive
+
+**Optimization Steps**:
+```tsx
+// Use React.memo for expensive components
+const ExpensiveComponent = React.memo(({ data }) => {
+  return <div>{/* component content */}</div>;
+});
+
+// Implement proper loading states
+const [isLoading, setIsLoading] = useState(true);
+
+// Use debouncing for search inputs
+import { useDebouncedCallback } from "use-debounce";
+
+const debouncedSearch = useDebouncedCallback(
+  (searchTerm) => {
+    // Perform search
+  },
+  300
+);
+```
+
+### 5. **API Integration Issues**
+
+**Symptoms**: External API calls fail or return unexpected results
+
+**Debug Steps**:
+```tsx
+// Add comprehensive error handling
+try {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+} catch (error) {
+  console.error("API Error:", error);
+  // Show user-friendly error message
+}
+```
+
+**Common API Issues**:
+- Missing API keys in preferences
+- Incorrect API endpoints
+- Rate limiting
+- CORS issues (for web APIs)
+
+### 6. **Preferences Not Working**
+
+**Symptoms**: Extension preferences don't save or load correctly
+
+**Solutions**:
+```tsx
+// Verify preferences interface
+interface Preferences {
+  apiKey: string;
+  baseUrl: string;
+}
+
+// Use preferences correctly
+import { getPreferenceValues } from "@raycast/api";
+
+const preferences = getPreferenceValues<Preferences>();
+
+// Validate preferences
+if (!preferences.apiKey) {
+  throw new Error("API key is required");
+}
+```
+
+### 7. **Publishing Issues**
+
+**Symptoms**: `npm run publish` fails or extension doesn't appear in store
+
+**Pre-publishing Checklist**:
+```bash
+# Verify all checks pass
+npm run lint
+npm run type-check
+npm run build
+
+# Check package.json metadata
+cat package.json | grep -E "(name|title|description|author)"
+
+# Verify assets exist
+ls -la assets/
+```
+
+**Common Publishing Issues**:
+- Missing required metadata in `package.json`
+- Invalid extension name (must be lowercase, no spaces)
+- Missing or incorrectly sized icons
+- Build errors preventing publication
+
+## Debug Tools and Techniques
+
+### 1. **Console Logging**
+```tsx
+// Add strategic console.log statements
+console.log("Component rendered with props:", props);
+console.log("API response:", response);
+console.log("Error occurred:", error);
+```
+
+### 2. **Raycast Developer Tools**
+- Open Raycast → Preferences → Extensions → Developer Tools
+- View console logs and errors
+- Inspect network requests
+- Debug React components
+
+### 3. **TypeScript Strict Mode**
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true
+  }
+}
+```
+
+### 4. **ESLint Configuration**
+```javascript
+// .eslintrc.js
+module.exports = {
+  extends: ["@raycast/eslint-config"],
+  rules: {
+    // Add custom rules as needed
+  }
+};
+```
+
+## Performance Monitoring
+
+### 1. **Bundle Size Analysis**
+```bash
+# Install bundle analyzer
+npm install --save-dev webpack-bundle-analyzer
+
+# Analyze bundle size
+npm run build -- --analyze
+```
+
+### 2. **Load Time Measurement**
+```tsx
+// Measure component load time
+const startTime = performance.now();
+// ... component logic
+const endTime = performance.now();
+console.log(`Component loaded in ${endTime - startTime}ms`);
+```
+
+## Getting Help
+
+### 1. **Raycast Documentation**
+- [Raycast API Reference](https://developers.raycast.com/api-reference)
+- [Extension Guidelines](https://developers.raycast.com/basics/prepare-an-extension-for-store)
+- [Community Discord](https://raycast.com/community)
+
+### 2. **Common Resources**
+- Check existing extensions for patterns
+- Review Raycast's example extensions
+- Search GitHub issues for similar problems
+
+### 3. **When to Ask for Help**
+- After trying all troubleshooting steps
+- When error messages are unclear
+- For architectural decisions
+- When performance issues persist
+
+## Prevention Best Practices
+
+1. **Start with TypeScript** - Catch errors early
+2. **Use ESLint** - Maintain code quality
+3. **Implement error boundaries** - Graceful error handling
+4. **Test thoroughly** - Cover edge cases
+5. **Monitor performance** - Optimize early
+6. **Document code** - Make maintenance easier
+

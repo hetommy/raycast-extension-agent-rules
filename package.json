@@ -1,0 +1,33 @@
+{
+  "name": "raycast-extension-cursor-rules",
+  "version": "1.0.0",
+  "description": "Cursor rules for Raycast extension development",
+  "main": "index.js",
+  "scripts": {
+    "validate": "node scripts/validate-rules.js",
+    "test": "npm run validate",
+    "lint": "echo 'No linting configured for this repository'",
+    "build": "echo 'No build process needed for this repository'"
+  },
+  "keywords": [
+    "cursor",
+    "raycast",
+    "extensions",
+    "rules",
+    "development",
+    "productivity"
+  ],
+  "author": "Tommy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/raycast-extension-cursor-rules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/raycast-extension-cursor-rules/issues"
+  },
+  "homepage": "https://github.com/yourusername/raycast-extension-cursor-rules#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

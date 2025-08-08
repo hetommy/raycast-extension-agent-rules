@@ -1,0 +1,185 @@
+---
+description: Raycast Extension Development Best Practices
+alwaysApply: false
+---
+
+# Raycast Extension Development
+
+## Project Structure
+
+Raycast extensions follow a specific structure:
+
+```
+extension-name/
+├── package.json          # Extension metadata and dependencies
+├── src/
+│   ├── index.tsx         # Main entry point
+│   ├── components/       # React components
+│   ├── lib/             # Utility functions
+│   └── types/           # TypeScript type definitions
+├── assets/              # Icons and other assets
+├── .eslintrc.js         # ESLint configuration
+├── tsconfig.json        # TypeScript configuration
+└── README.md           # Extension documentation
+```
+
+## Essential Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development mode
+npm run dev
+
+# Build for production
+npm run build
+
+# Lint code
+npm run lint
+
+# Type check
+npm run type-check
+
+# Publish extension
+npm run publish
+```
+
+## Key Development Principles
+
+### 1. **TypeScript First**
+- Always use TypeScript for new extensions
+- Define proper types for all props and state
+- Use strict TypeScript configuration
+
+### 2. **React Best Practices**
+- Use functional components with hooks
+- Implement proper error boundaries
+- Follow Raycast's design patterns
+
+### 3. **Performance Considerations**
+- Lazy load components when possible
+- Optimize bundle size
+- Use proper memoization
+
+### 4. **Error Handling**
+- Implement comprehensive error handling
+- Provide user-friendly error messages
+- Log errors appropriately
+
+## Common Patterns
+
+### Action Component
+```tsx
+import { ActionPanel, Action, List } from "@raycast/api";
+
+export default function Command() {
+  return (
+    <List>
+      <List.Item
+        title="Example Item"
+        actions={
+          <ActionPanel>
+            <Action.OpenInBrowser url="https://example.com" />
+            <Action.CopyToClipboard content="example" />
+          </ActionPanel>
+        }
+      />
+    </List>
+  );
+}
+```
+
+### Form Component
+```tsx
+import { Form, ActionPanel, Action } from "@raycast/api";
+
+export default function Command() {
+  return (
+    <Form
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm title="Submit" onSubmit={handleSubmit} />
+        </ActionPanel>
+      }
+    >
+      <Form.TextField id="name" title="Name" placeholder="Enter name" />
+      <Form.TextArea id="description" title="Description" />
+    </Form>
+  );
+}
+```
+
+## API Usage
+
+### Preferences
+```tsx
+import { getPreferenceValues } from "@raycast/api";
+
+interface Preferences {
+  apiKey: string;
+  baseUrl: string;
+}
+
+const preferences = getPreferenceValues<Preferences>();
+```
+
+### Local Storage
+```tsx
+import { LocalStorage } from "@raycast/api";
+
+// Store data
+await LocalStorage.setItem("key", "value");
+
+// Retrieve data
+const value = await LocalStorage.getItem("key");
+```
+
+### Clipboard
+```tsx
+import { Clipboard } from "@raycast/api";
+
+// Copy to clipboard
+await Clipboard.copy("text to copy");
+
+// Paste from clipboard
+const text = await Clipboard.paste();
+```
+
+## Testing Guidelines
+
+1. **Test all user flows** - Ensure every action works as expected
+2. **Test error scenarios** - Handle network failures, invalid inputs
+3. **Test performance** - Ensure extensions load quickly
+4. **Test accessibility** - Follow accessibility guidelines
+
+## Publishing Checklist
+
+Before publishing an extension:
+
+- [ ] All TypeScript errors resolved
+- [ ] ESLint passes without errors
+- [ ] Extension builds successfully
+- [ ] All functionality tested
+- [ ] README updated with usage instructions
+- [ ] Icons and assets properly sized
+- [ ] Preferences configured correctly
+- [ ] Error handling implemented
+- [ ] Performance optimized
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Extension not loading**: Check `package.json` and entry point
+2. **TypeScript errors**: Verify `tsconfig.json` configuration
+3. **Build failures**: Check for missing dependencies
+4. **Runtime errors**: Review error boundaries and error handling
+
+### Debug Tips
+
+- Use `console.log` for debugging (visible in Raycast's developer tools)
+- Check Raycast's developer console for errors
+- Test with different input scenarios
+- Verify API endpoints are accessible
+
