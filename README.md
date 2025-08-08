@@ -4,7 +4,7 @@ This repository contains Cursor rules specifically designed for working with Ray
 
 ## Available Rules
 
-### 1. **Testing Raycast Extensions** (`testing.mdc`)
+### 1. **Testing Raycast Extensions** (`rules/testing.mdc`)
 - **Purpose**: Ensures proper testing workflow when working with Raycast extensions
 - **Key Features**:
   - Critical directory navigation guidance
@@ -12,7 +12,7 @@ This repository contains Cursor rules specifically designed for working with Ray
   - Step-by-step verification process
   - Integration with PR review workflow
 
-### 2. **Reviewing Raycast Extension PRs** (`reviews.mdc`)
+### 2. **Reviewing Raycast Extension PRs** (`rules/reviews.mdc`)
 - **Purpose**: Streamlines the PR review process for Raycast extensions
 - **Key Features**:
   - Automated PR URL parsing
@@ -21,7 +21,7 @@ This repository contains Cursor rules specifically designed for working with Ray
   - Publishing guidance
   - Troubleshooting tips
 
-### 3. **Raycast Extension Development** (`development.mdc`)
+### 3. **Raycast Extension Development** (`rules/development.mdc`)
 - **Purpose**: General development best practices and patterns
 - **Key Features**:
   - Project structure guidelines
@@ -30,7 +30,7 @@ This repository contains Cursor rules specifically designed for working with Ray
   - API usage examples
   - Publishing checklist
 
-### 4. **Troubleshooting Guide** (`troubleshooting.mdc`)
+### 4. **Troubleshooting Guide** (`rules/troubleshooting.mdc`)
 - **Purpose**: Comprehensive troubleshooting for common issues
 - **Key Features**:
   - Common problems and solutions
@@ -57,10 +57,14 @@ These rules are designed to be used with Cursor's AI assistant. They provide con
 ```
 raycast-extension-cursor-rules/
 ├── README.md          # This file
-├── testing.mdc        # Testing workflow rules
-├── reviews.mdc        # PR review workflow rules
-├── development.mdc    # Development best practices
-├── troubleshooting.mdc # Troubleshooting guide
+├── rules/             # Cursor rules directory
+│   ├── testing.mdc        # Testing workflow rules
+│   ├── reviews.mdc        # PR review workflow rules
+│   ├── development.mdc    # Development best practices
+│   └── troubleshooting.mdc # Troubleshooting guide
+├── scripts/           # Utility scripts
+│   └── validate-rules.js  # Rule validation script
+├── package.json       # Project metadata
 └── .gitignore         # Git ignore file
 ```
 

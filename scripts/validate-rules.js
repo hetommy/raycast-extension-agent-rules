@@ -65,7 +65,7 @@ function validateRuleFile(filePath) {
 }
 
 function main() {
-  const rulesDir = path.join(__dirname, '..');
+  const rulesDir = path.join(__dirname, '..', 'rules');
   const files = fs.readdirSync(rulesDir);
   const mdcFiles = files.filter(file => file.endsWith('.mdc'));
   
