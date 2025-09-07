@@ -23,13 +23,71 @@ extension-name/
 └── README.md           # Extension documentation
 ```
 
+## Starting Development on an Extension
+
+When a user says "@start development.mdc on {extension-name}", the assistant should:
+
+### **Assistant Workflow**
+
+1. **Search for Extension**
+   - Use `glob_file_search` to find the extension directory
+   - Look for patterns like `**/{extension-name}/package.json`
+   - If not confident about the extension location, ask the user to confirm
+
+2. **Verify Extension Found**
+   - Confirm the extension directory exists
+   - Check that it has a valid `package.json` with Raycast extension metadata
+   - If multiple matches found, ask user to clarify which one
+
+3. **Follow Development Setup**
+   - Navigate to the specific extension directory
+   - Install dependencies
+   - Start development server
+   - Verify extension is running
+
+### **User Workflow**
+
+When starting development on a specific extension, follow this workflow:
+
+### 1. **Locate Extension Directory**
+```bash
+# Navigate to the specific extension directory
+cd "extensions/extensions/{extension-name}"
+```
+
+### 2. **Verify Extension Structure**
+- Confirm `package.json` exists in the extension directory
+- Check that the extension has the expected Raycast extension structure
+
+### 3. **Install Dependencies**
+```bash
+# Install dependencies in the extension directory
+npm install
+```
+
+### 4. **Start Development Server**
+```bash
+# Start Raycast development mode (preferred)
+ray develop
+
+# OR use npm script if available
+npm run dev
+```
+
+### 5. **Verify Extension is Running**
+- Check Raycast for the extension commands
+- Test basic functionality
+- Verify hot reload is working
+
 ## Essential Commands
 
 ```bash
-# Install dependencies
+# Install dependencies (run in extension directory)
 npm install
 
-# Start development mode
+# Start development mode (run in extension directory)
+ray develop
+# OR
 npm run dev
 
 # Build for production
@@ -37,6 +95,9 @@ npm run build
 
 # Lint code
 npm run lint
+
+# Fix linting issues
+npm run fix-lint
 
 # Type check
 npm run type-check
@@ -169,6 +230,22 @@ Before publishing an extension:
 
 ## Troubleshooting
 
+### Development Setup Issues
+
+1. **"Could not read package.json" Error**
+   - **Cause**: Running commands from wrong directory (project root instead of extension directory)
+   - **Solution**: Always `cd` into the specific extension directory first
+   - **Example**: `cd "extensions/extensions/extension-name" && npm install`
+
+2. **Extension Not Found**
+   - **Cause**: Extension name doesn't match directory name
+   - **Solution**: Use `glob_file_search` to locate the extension
+   - **Ask user**: "I found multiple extensions. Did you mean [extension-name]?"
+
+3. **Development Server Not Starting**
+   - **Cause**: Missing dependencies or incorrect directory
+   - **Solution**: Run `npm install` in extension directory, then `ray develop`
+
 ### Common Issues
 
 1. **Extension not loading**: Check `package.json` and entry point
@@ -182,4 +259,5 @@ Before publishing an extension:
 - Check Raycast's developer console for errors
 - Test with different input scenarios
 - Verify API endpoints are accessible
+- Always run commands from the extension directory, not the project root
 
