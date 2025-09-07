@@ -95,12 +95,15 @@ npm install
 
 ### 5. **Start Development Server**
 ```bash
+# CRITICAL: Always run from the extension directory, not project root
 # Start Raycast development mode (preferred)
 ray develop
 
 # OR use npm script if available
 npm run dev
 ```
+
+**⚠️ IMPORTANT**: Always ensure you're in the extension directory before running `ray develop`. Running from the project root will fail with "cannot read package manifest" error.
 
 ### 6. **Verify Extension is Running**
 - Check Raycast for the extension commands
@@ -315,10 +318,11 @@ Before publishing an extension:
 
 ### Development Setup Issues
 
-1. **"Could not read package.json" Error**
+1. **"Could not read package.json" or "cannot read package manifest" Error**
    - **Cause**: Running commands from wrong directory (project root instead of extension directory)
    - **Solution**: Always `cd` into the specific extension directory first
    - **Example**: `cd "extensions/extensions/extension-name" && npm install`
+   - **For ray develop**: `cd "extensions/extensions/extension-name" && ray develop`
 
 2. **Extension Not Found**
    - **Cause**: Extension name doesn't match directory name
