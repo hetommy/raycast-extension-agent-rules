@@ -41,6 +41,9 @@ When a user says "@start development.mdc on {extension-name}", the assistant sho
 
 3. **Follow Development Setup**
    - Navigate to the specific extension directory
+   - Pull latest changes from origin
+   - Ask user what feature/bug/improvement they want to work on
+   - Create and checkout to a new feature branch
    - Install dependencies
    - Start development server
    - Verify extension is running
@@ -59,13 +62,23 @@ cd "extensions/extensions/{extension-name}"
 - Confirm `package.json` exists in the extension directory
 - Check that the extension has the expected Raycast extension structure
 
-### 3. **Install Dependencies**
+### 3. **Git Workflow**
+```bash
+# Pull latest changes from origin
+git pull origin main
+
+# Ask user what they want to work on, then create feature branch
+# Examples: feature/add-dark-mode, bugfix/fix-search-error, improvement/update-ui
+git checkout -b feature/your-feature-name
+```
+
+### 4. **Install Dependencies**
 ```bash
 # Install dependencies in the extension directory
 npm install
 ```
 
-### 4. **Start Development Server**
+### 5. **Start Development Server**
 ```bash
 # Start Raycast development mode (preferred)
 ray develop
@@ -74,10 +87,65 @@ ray develop
 npm run dev
 ```
 
-### 5. **Verify Extension is Running**
+### 6. **Verify Extension is Running**
 - Check Raycast for the extension commands
 - Test basic functionality
 - Verify hot reload is working
+
+## Git Workflow Best Practices
+
+### **Branch Naming Conventions**
+```bash
+# Feature branches
+feature/add-new-command
+feature/improve-ui
+feature/add-preferences
+
+# Bug fix branches
+bugfix/fix-search-error
+bugfix/resolve-crash
+bugfix/typo-in-readme
+
+# Improvement branches
+improvement/update-dependencies
+improvement/refactor-code
+improvement/optimize-performance
+
+# Hotfix branches (for urgent fixes)
+hotfix/security-patch
+hotfix/critical-bug
+```
+
+### **Git Commands for Development**
+```bash
+# Check current status
+git status
+
+# Add changes
+git add .
+
+# Commit with descriptive message
+git commit -m "feat: add new search functionality"
+
+# Push feature branch
+git push origin feature/your-branch-name
+
+# Switch back to main
+git checkout main
+
+# Delete local feature branch after merge
+git branch -d feature/your-branch-name
+```
+
+### **Commit Message Format**
+Follow conventional commits:
+- `feat:` for new features
+- `fix:` for bug fixes
+- `docs:` for documentation changes
+- `style:` for formatting changes
+- `refactor:` for code refactoring
+- `test:` for adding tests
+- `chore:` for maintenance tasks
 
 ## Essential Commands
 
@@ -245,6 +313,14 @@ Before publishing an extension:
 3. **Development Server Not Starting**
    - **Cause**: Missing dependencies or incorrect directory
    - **Solution**: Run `npm install` in extension directory, then `ray develop`
+
+4. **Git Pull Conflicts**
+   - **Cause**: Local changes conflict with remote changes
+   - **Solution**: Stash local changes, pull, then apply stash: `git stash && git pull && git stash pop`
+
+5. **Branch Already Exists**
+   - **Cause**: Feature branch name already exists locally
+   - **Solution**: Use different branch name or delete existing: `git branch -D old-branch-name`
 
 ### Common Issues
 
