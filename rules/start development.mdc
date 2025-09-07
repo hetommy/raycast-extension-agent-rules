@@ -42,11 +42,26 @@ When a user says "@start development.mdc on {extension-name}", the assistant sho
 3. **Follow Development Setup**
    - Navigate to the specific extension directory
    - Pull latest changes from origin
-   - Ask user what feature/bug/improvement they want to work on
-   - Create and checkout to a new feature branch
+   - **CRITICAL: Ask user what feature/bug/improvement they want to work on**
+   - **MANDATORY: Create and checkout to a new feature branch BEFORE making any changes**
    - Install dependencies
    - Start development server
    - Verify extension is running
+   - **Only then begin implementing the requested changes**
+
+### **⚠️ IMPORTANT WORKFLOW RULES**
+
+**NEVER start implementing changes before:**
+1. ✅ Asking the user what they want to work on
+2. ✅ Creating a proper feature branch
+3. ✅ Pulling latest changes from origin
+
+**ALWAYS follow this exact order:**
+1. Ask user for feature/bug description
+2. Create feature branch (e.g., `feature/remove-search-argument-requirement`)
+3. Pull latest changes
+4. Start development server
+5. **THEN** begin implementation
 
 ### **User Workflow**
 
