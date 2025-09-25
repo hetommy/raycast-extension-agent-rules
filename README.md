@@ -49,22 +49,29 @@ These rules are designed to be used with Cursor's AI assistant. They provide con
 ## Installation
 
 1. Clone this repository to your local machine
-2. In Cursor, these rules will be automatically available when working in Raycast extension projects
+2. These rules will be automatically available when working in Raycast extension projects with AI agents
 3. The rules are designed to be context-aware and will activate based on your current task
+
+## Validation
+
+To validate that all rule files are properly formatted:
+
+```bash
+node scripts/validate-rules.js
+```
 
 ## File Structure
 
 ```
-raycast-extension-cursor-rules/
+raycast-extension-agent-rules/
 ├── README.md          # This file
-├── rules/             # Cursor rules directory
+├── rules/             # AI agent rules directory
 │   ├── testing.mdc        # Testing workflow rules
 │   ├── reviews.mdc        # PR review workflow rules
-│   ├── development.mdc    # Development best practices
+│   ├── start development.mdc    # Development best practices
 │   └── troubleshooting.mdc # Troubleshooting guide
 ├── scripts/           # Utility scripts
 │   └── validate-rules.js  # Rule validation script
-├── package.json       # Project metadata
 └── .gitignore         # Git ignore file
 ```
 
