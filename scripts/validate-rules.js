@@ -69,7 +69,7 @@ function main() {
   const files = fs.readdirSync(rulesDir);
   const mdcFiles = files.filter(file => file.endsWith('.mdc'));
   
-  log(`\n🔍 Validating ${mdcFiles.length} Cursor rule files...\n`);
+  log(`\n🔍 Validating ${mdcFiles.length} AI agent rule files...\n`);
   
   let validCount = 0;
   let invalidCount = 0;
