@@ -79,8 +79,6 @@ cd "extensions/extensions/{extension-name}"
 
 ### 3. **Git Workflow**
 ```bash
-# Pull latest changes from both repositories
-(cd cursor-rules && git init && git pull origin main) && (cd raycast-extensions && git init && git pull origin main)
 
 # Pull latest changes from origin
 git pull origin main
