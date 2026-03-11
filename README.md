@@ -49,8 +49,13 @@ These rules are designed to be used with AI agents and assistants. They provide 
 ## 📦 Installation
 
 1. Clone this repository to your local machine
-2. These rules will be automatically available when working in Raycast extension projects with AI agents
-3. The rules are designed to be context-aware and will activate based on your current task
+2. (Optional) From the **workspace root** (parent of `cursor-rules` and `raycast-extensions`), run:
+   ```bash
+   node cursor-rules/scripts/init-workspace.js
+   ```
+   This validates rules, syncs them to `.cursor/rules`, and runs `npm install` in each Raycast extension.
+3. These rules will be automatically available when working in Raycast extension projects with AI agents
+4. The rules are designed to be context-aware and will activate based on your current task
 
 ## ✅ Validation
 
@@ -71,6 +76,7 @@ raycast-extension-agent-rules/
 │   ├── start development.mdc # Development best practices
 │   └── troubleshooting.mdc   # Troubleshooting guide
 ├── scripts/               # Utility scripts
+│   ├── init-workspace.js     # Init cursor-rules + raycast-extensions
 │   └── validate-rules.js     # Rule validation script
 └── .gitignore             # Git ignore file
 ```
