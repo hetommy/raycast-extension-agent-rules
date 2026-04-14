@@ -1,101 +1,94 @@
 # AI Agent Rules for Raycast Extensions
 
-This repository contains AI agent rules specifically designed for working with Raycast extensions. These rules help streamline the development, testing, and review process for Raycast extensions.
+This repository contains Cursor **rules** (`.mdc`) and **agent skills** for working with Raycast extensions: development, testing, review, and Store readiness.
 
-## 🎯 Available Rules
+## Rules (`rules/`)
+
+These `.mdc` files are reference material for AI agents. Wire them into Cursor manually (for example copy or symlink into your project’s `.cursor/rules/`, or attach them per task)—they are **not** copied by `init-workspace.js`.
 
 ### 1. **Testing Raycast Extensions** (`rules/testing.mdc`)
-- **Purpose**: Ensures proper testing workflow when working with Raycast extensions
-- **Key Features**:
-  - Critical directory navigation guidance
-  - Common mistake prevention
-  - Step-by-step verification process
-  - Integration with PR review workflow
+
+- Testing workflow, directory navigation, and verification steps.
 
 ### 2. **Reviewing Raycast Extension PRs** (`rules/reviews.mdc`)
-- **Purpose**: Streamlines the PR review process for Raycast extensions
-- **Key Features**:
-  - Automated PR URL parsing
-  - Sparse checkout for efficient cloning
-  - Complete setup workflow
-  - Publishing guidance
-  - Troubleshooting tips
+
+- PR URLs, sparse checkout, local run, publishing notes, troubleshooting.
 
 ### 3. **Raycast Extension Development** (`rules/start development.mdc`)
-- **Purpose**: General development best practices and patterns
-- **Key Features**:
-  - Project structure guidelines
-  - Essential commands and workflows
-  - Common React/TypeScript patterns
-  - API usage examples
-  - Publishing checklist
+
+- Project layout, git workflow, commands, patterns, publishing checklist.
 
 ### 4. **Troubleshooting Guide** (`rules/troubleshooting.mdc`)
-- **Purpose**: Comprehensive troubleshooting for common issues
-- **Key Features**:
-  - Common problems and solutions
-  - Debug tools and techniques
-  - Performance monitoring
-  - Getting help resources
 
-## 🚀 Usage
+- Common issues, debugging, performance, getting help.
 
-These rules are designed to be used with AI agents and assistants. They provide context-aware guidance for:
+## Agent skills (`skills/`)
 
-- **Extension Development**: Proper setup and testing workflows
-- **PR Reviews**: Efficient review and testing of extension changes
-- **Publishing**: Safe deployment of extension updates
+Each skill is a directory with a `SKILL.md` file (YAML frontmatter + instructions). They are designed for Cursor’s **Skills** feature.
 
-## 📦 Installation
 
-1. Clone this repository to your local machine
-2. (Optional) From the **workspace root** (parent of `cursor-rules` and `raycast-extensions`), run:
-   ```bash
+| Skill                           | Purpose                                                                              |
+| ------------------------------- | ------------------------------------------------------------------------------------ |
+| `init-workspace`                | Runs `scripts/init-workspace.js`: git init, skills → `.cursor/skills/`, `npm install` in extensions. |
+| `raycast-extension-review`      | Store/manifest review using current Raycast developer docs (fetched live).           |
+| `raycast-extension-pr-review`   | Check out and run extensions from `github.com/raycast/extensions` PRs locally.       |
+| `raycast-extension-development` | Start-of-workflow: locate extension, branch, install, `ray develop` / `npm run dev`. |
+
+
+Run `**init-workspace.js`** from your **workspace root** (parent of `cursor-rules` and `raycast-extensions`) to copy these into `.cursor/skills/` so Cursor can discover them. The **`init-workspace`** skill tells the agent to execute that script instead of redoing the steps by hand.
+
+## Usage
+
+- **Rules**: Use as project or ad hoc context in Cursor (see above).
+- **Skills**: Sync with `init-workspace.js`, then use or @-mention them in the agent as needed.
+
+## Installation
+
+1. Clone this repository.
+2. (Optional) From the **workspace root**, run:
+  ```bash
    node cursor-rules/scripts/init-workspace.js
-   ```
-   This validates rules, syncs them to `.cursor/rules`, and runs `npm install` in each Raycast extension.
-3. These rules will be automatically available when working in Raycast extension projects with AI agents
-4. The rules are designed to be context-aware and will activate based on your current task
+  ```
+   This script:
+  - Runs `git init` on `cursor-rules` and `raycast-extensions` when the folder exists and is not already a Git repository.
+  - Copies each valid skill under `cursor-rules/skills/<name>/` (must contain `SKILL.md`) to `.cursor/skills/<name>/`.
+  - Runs `npm install` in each extension under `raycast-extensions/extensions/` that has a `package.json`.
 
-## ✅ Validation
-
-To validate that all rule files are properly formatted:
-
-```bash
-node scripts/validate-rules.js
-```
-
-## 📁 File Structure
+## File structure
 
 ```
-raycast-extension-agent-rules/
-├── README.md              # This file
-├── rules/                 # AI agent rules directory
-│   ├── testing.mdc           # Testing workflow rules
-│   ├── reviews.mdc           # PR review workflow rules
-│   ├── start development.mdc # Development best practices
-│   └── troubleshooting.mdc   # Troubleshooting guide
-├── scripts/               # Utility scripts
-│   ├── init-workspace.js     # Init cursor-rules + raycast-extensions
-│   └── validate-rules.js     # Rule validation script
-└── .gitignore             # Git ignore file
+cursor-rules/
+├── README.md                 # This file
+├── rules/                    # .mdc rules (manual install into .cursor/rules if desired)
+│   ├── testing.mdc
+│   ├── reviews.mdc
+│   ├── start development.mdc
+│   └── troubleshooting.mdc
+├── skills/                   # Cursor agent skills (synced by init-workspace.js)
+│   ├── init-workspace/
+│   ├── raycast-extension-review/
+│   ├── raycast-extension-pr-review/
+│   └── raycast-extension-development/
+├── scripts/
+│   └── init-workspace.js     # Git init, skills → .cursor/skills, npm install in extensions
+└── .gitignore
 ```
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions! When adding new rules:
+**Rules**
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/your-rule-name`
-3. **Add your rule**: Create a new `.mdc` file with a descriptive name
-4. **Follow the format**: Use YAML frontmatter with `description` and `alwaysApply` fields
-5. **Test your rule**: Run `node scripts/validate-rules.js` to ensure it's properly formatted
-6. **Update documentation**: Update this README to document the new rule
-7. **Submit a PR**: Create a pull request with a clear description
+1. Fork and create a branch: `git checkout -b feature/your-rule-name`
+2. Add a `.mdc` file under `rules/` with YAML frontmatter (`description`, `alwaysApply`, etc.).
+3. Update this README if you add a new rule.
 
-## 📝 Rule Format
+**Skills**
 
-Each rule file follows this structure:
+1. Add a directory under `skills/<skill-name>/` with a `SKILL.md`. Follow [Agent Skills](https://cursor.com/docs/context/skills) for frontmatter and layout.
+2. Keep the description field specific (third person, what + when).
+3. Run `node cursor-rules/scripts/init-workspace.js` from the workspace root to verify sync, or copy `skills/<name>/` to `.cursor/skills/<name>/` manually.
+
+## Rule format (`.mdc`)
 
 ```yaml
 ---
@@ -107,25 +100,19 @@ alwaysApply: false
 
 ## Section 1
 Content with code examples and explanations
-
-## Section 2
-More content...
 ```
 
-## 🎨 Best Practices
+## Best practices
 
-- Keep rules focused on specific workflows
-- Include practical code examples
-- Provide troubleshooting guidance
-- Use clear, actionable language
-- Test rules in real scenarios before committing
-- Follow the existing naming conventions
+- Keep rules and skills focused on one workflow each.
+- Prefer linking official Raycast docs over duplicating API details.
+- Test changes against a real extension when possible.
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🔗 Links
+## Links
 
 - **Repository**: [raycast-extension-agent-rules](https://github.com/hetommy/raycast-extension-agent-rules)
 - **Issues**: [Report a bug or request a feature](https://github.com/hetommy/raycast-extension-agent-rules/issues)
@@ -133,4 +120,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-**Made with ❤️ for the Raycast extension development community**
+Made for the Raycast extension development community.

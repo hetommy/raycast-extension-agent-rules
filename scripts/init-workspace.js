@@ -4,7 +4,8 @@
  * Initialize the workspace: cursor-rules and raycast-extensions.
  * Run from repo root (parent of cursor-rules and raycast-extensions) or from cursor-rules/.
  *
- * - cursor-rules: validates rules, then syncs rules into .cursor/rules so Cursor picks them up.
+ * - cursor-rules / raycast-extensions: git init if the folder exists and is not already a repo.
+ * - cursor-rules: syncs skills (directories under cursor-rules/skills/) into .cursor/skills/.
  * - raycast-extensions: runs npm install in each extension that has a package.json.
  */
 
@@ -34,45 +35,63 @@ function getWorkspaceRoot() {
   return cursorRulesDir;
 }
 
-function initCursorRules(workspaceRoot) {
-  const cursorRulesDir = path.join(workspaceRoot, "cursor-rules");
-  const rulesDir = path.join(cursorRulesDir, "rules");
-  const cursorDir = path.join(workspaceRoot, ".cursor");
-  const cursorRulesDest = path.join(cursorDir, "rules");
+function gitInitIfNeeded(repoPath, label) {
+  if (!fs.existsSync(repoPath)) {
+    log(`${label}: not found; skipping git init.`, "yellow");
+    return;
+  }
+  const gitDir = path.join(repoPath, ".git");
+  if (fs.existsSync(gitDir)) {
+    log(`  ${label}: already a git repository`, "green");
+    return;
+  }
+  try {
+    execSync("git init", { cwd: repoPath, stdio: "inherit" });
+    log(`  ${label}: git init`, "green");
+  } catch {
+    log(`  ${label}: git init failed`, "red");
+  }
+}
 
-  if (!fs.existsSync(rulesDir)) {
-    log("cursor-rules/rules not found; skipping cursor-rules init.", "yellow");
+function initCursorSkills(workspaceRoot) {
+  const cursorRulesDir = path.join(workspaceRoot, "cursor-rules");
+  const skillsSrcRoot = path.join(cursorRulesDir, "skills");
+  const cursorDir = path.join(workspaceRoot, ".cursor");
+  const skillsDestRoot = path.join(cursorDir, "skills");
+
+  if (!fs.existsSync(skillsSrcRoot)) {
+    log("cursor-rules/skills not found; skipping skills sync.", "yellow");
     return;
   }
 
-  log("\n--- cursor-rules ---", "cyan");
-  const validateScript = path.join(cursorRulesDir, "scripts", "validate-rules.js");
-  if (fs.existsSync(validateScript)) {
-    try {
-      execSync(`node "${validateScript}"`, {
-        cwd: cursorRulesDir,
-        stdio: "inherit",
-      });
-    } catch {
-      log("Rule validation failed; continuing with sync.", "yellow");
-    }
-  }
+  log("\n--- cursor-rules (skills) ---", "cyan");
 
   if (!fs.existsSync(cursorDir)) {
     fs.mkdirSync(cursorDir, { recursive: true });
   }
-  if (!fs.existsSync(cursorRulesDest)) {
-    fs.mkdirSync(cursorRulesDest, { recursive: true });
+  if (!fs.existsSync(skillsDestRoot)) {
+    fs.mkdirSync(skillsDestRoot, { recursive: true });
   }
 
-  const files = fs.readdirSync(rulesDir).filter((f) => f.endsWith(".mdc"));
-  for (const file of files) {
-    const src = path.join(rulesDir, file);
-    const dest = path.join(cursorRulesDest, file);
-    fs.copyFileSync(src, dest);
-    log(`  Synced ${file} -> .cursor/rules/`, "green");
+  const entries = fs.readdirSync(skillsSrcRoot, { withFileTypes: true }).filter((d) => d.isDirectory());
+  let synced = 0;
+  for (const entry of entries) {
+    const name = entry.name;
+    const src = path.join(skillsSrcRoot, name);
+    const skillMd = path.join(src, "SKILL.md");
+    if (!fs.existsSync(skillMd)) {
+      log(`  Skip ${name}/ (no SKILL.md)`, "yellow");
+      continue;
+    }
+    const dest = path.join(skillsDestRoot, name);
+    if (fs.existsSync(dest)) {
+      fs.rmSync(dest, { recursive: true, force: true });
+    }
+    fs.cpSync(src, dest, { recursive: true });
+    log(`  Synced skills/${name}/ -> .cursor/skills/${name}/`, "green");
+    synced++;
   }
-  log("cursor-rules: validated and synced to .cursor/rules", "green");
+  log(`cursor-rules: ${synced} skill(s) synced to .cursor/skills`, "green");
 }
 
 function initRaycastExtensions(workspaceRoot) {
@@ -117,7 +136,12 @@ function initRaycastExtensions(workspaceRoot) {
 function main() {
   const workspaceRoot = getWorkspaceRoot();
   log(`Workspace root: ${workspaceRoot}`, "cyan");
-  initCursorRules(workspaceRoot);
+
+  log("\n--- git (workspace repos) ---", "cyan");
+  gitInitIfNeeded(path.join(workspaceRoot, "cursor-rules"), "cursor-rules");
+  gitInitIfNeeded(path.join(workspaceRoot, "raycast-extensions"), "raycast-extensions");
+
+  initCursorSkills(workspaceRoot);
   initRaycastExtensions(workspaceRoot);
   log("\nDone.", "cyan");
 }
