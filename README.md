@@ -29,13 +29,13 @@ Each skill is a directory with a `SKILL.md` file (YAML frontmatter + instruction
 
 | Skill                           | Purpose                                                                              |
 | ------------------------------- | ------------------------------------------------------------------------------------ |
-| `init-workspace`                | Runs `scripts/init-workspace.js`: git init, skills → `.cursor/skills/`, `npm install` in extensions. |
+| `raycast-initialize-workspace`  | Runs `scripts/init-workspace.js`: git init, skills → `.cursor/skills/`, `npm install` in extensions. |
 | `raycast-extension-review`      | Store/manifest review using current Raycast developer docs (fetched live).           |
 | `raycast-extension-pr-review`   | Check out and run extensions from `github.com/raycast/extensions` PRs locally.       |
 | `raycast-extension-development` | Start-of-workflow: locate extension, branch, install, `ray develop` / `npm run dev`. |
 
 
-Run `**init-workspace.js`** from your **workspace root** (parent of `cursor-rules` and `raycast-extensions`) to copy these into `.cursor/skills/` so Cursor can discover them. The **`init-workspace`** skill tells the agent to execute that script instead of redoing the steps by hand.
+Run `**init-workspace.js`** from your **workspace root** (parent of `cursor-rules` and `raycast-extensions`) to copy these into `.cursor/skills/` so Cursor can discover them. The **`raycast-initialize-workspace`** skill tells the agent to execute that script instead of redoing the steps by hand.
 
 ## Usage
 
@@ -65,7 +65,7 @@ cursor-rules/
 │   ├── start development.mdc
 │   └── troubleshooting.mdc
 ├── skills/                   # Cursor agent skills (synced by init-workspace.js)
-│   ├── init-workspace/
+│   ├── raycast-initialize-workspace/
 │   ├── raycast-extension-review/
 │   ├── raycast-extension-pr-review/
 │   └── raycast-extension-development/

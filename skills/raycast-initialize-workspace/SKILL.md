@@ -1,14 +1,14 @@
 ---
-name: init-workspace
+name: raycast-initialize-workspace
 description: >-
   Runs the workspace bootstrap script that git-inits cursor-rules and raycast-extensions when needed,
   copies cursor-rules skills into .cursor/skills/, and npm installs each Raycast extension under
   raycast-extensions/extensions/. Use when cloning or setting up this workspace, syncing skills after
   pulling cursor-rules changes, refreshing extension dependencies, or when the user asks to run
-  init-workspace or initialize the Raycast workspace.
+  raycast-initialize-workspace or initialize the Raycast workspace.
 ---
 
-# Init workspace
+# Raycast: initialize workspace
 
 Prefer **running the script** over reimplementing its steps manually.
 
@@ -21,7 +21,7 @@ Prefer **running the script** over reimplementing its steps manually.
 - First-time or fresh setup after clone
 - After pulling changes under `cursor-rules/skills/` (so Cursor picks up updated skills)
 - When extensions need a clean `npm install` across `raycast-extensions/extensions/`
-- User mentions init-workspace, workspace setup, or syncing skills
+- User mentions raycast-initialize-workspace, workspace setup, or syncing skills
 
 ## Command
 
