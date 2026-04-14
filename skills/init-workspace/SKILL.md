@@ -8,9 +8,13 @@ description: >-
   init-workspace or initialize the Raycast workspace.
 ---
 
-# Init workspace (script)
+# Init workspace
 
 Prefer **running the script** over reimplementing its steps manually.
+
+## Prerequisites
+
+- **Node.js** and **npm** on `PATH` (the script is invoked with `node` and runs `npm install` in each extension).
 
 ## When to run
 
@@ -31,13 +35,27 @@ The script may also be invoked from `cursor-rules/` (it resolves the workspace r
 
 ## What it does
 
-1. **`git init`** on `cursor-rules` and `raycast-extensions` if those folders exist and are not already git repos
-2. **Skills sync**: for each subdirectory of `cursor-rules/skills/` that contains `SKILL.md`, replaces `.cursor/skills/<name>/` with a copy from source
-3. **Extensions**: for each `raycast-extensions/extensions/<ext>/` with `package.json`, removes `node_modules` if present and runs `npm install` (with engine ignores and raised ulimits as implemented in the script)
+1. **`git init`** on `cursor-rules` and `raycast-extensions` if those folders exist and are not already git repos (logs and continues if a folder is missing or `git init` fails).
 
-If Node 23 is in use, the script may log that `--ignore-engines` is applied for extension installs.
+2. **Skills sync**
+   - Ensures `.cursor/` and `.cursor/skills/` exist.
+   - For each subdirectory of `cursor-rules/skills/` that contains `SKILL.md`, replaces `.cursor/skills/<name>/` with a full copy from source.
+   - Subdirectories **without** `SKILL.md` are skipped (logged).
+
+3. **Extensions**
+   - For each `raycast-extensions/extensions/<ext>/` with `package.json`, removes `node_modules` if present, then runs `npm install --ignore-engines` with raised ulimits (macOS) to avoid extract issues.
+   - **`--ignore-engines` is always used** for extension installs. If **Node 23** is detected, the script logs an extra line explaining why engines are ignored.
+   - A failed install for one extension is logged in red; the script **continues** with other extensions.
+
+If `raycast-extensions/extensions/` is missing, that section is skipped. If `cursor-rules/skills/` is missing, skills sync is skipped.
+
+## Success and verification
+
+- Console ends with **`Done.`** and summary lines (git status, skill sync count, extension install count).
+- After a run, `.cursor/skills/<skill-name>/` should mirror `cursor-rules/skills/<skill-name>/` for each synced skill.
 
 ## Agent notes
 
 - **Do not** hand-copy skill folders unless the script cannot run; default is to execute the command above and read output for errors.
-- If `raycast-extensions/extensions/` is missing, the script skips that section; if `cursor-rules/skills/` is missing, skills sync is skipped.
+- **`.mdc` rules** under `cursor-rules` are not copied by this script (see `cursor-rules/README.md` if rules need wiring into `.cursor/rules/`).
+- For day-to-day work on a single extension after setup, use the **raycast-extension-development** skill (branch, `npm install` in the extension dir, `ray develop` / `npm run dev`).
